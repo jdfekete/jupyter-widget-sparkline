@@ -1,0 +1,6 @@
+recursive-include jupyter_widget_sparkline/static *.*
+include jupyter-widget-sparkline.json
+
+include LICENSE
+include setup.py
+include pyproject.toml

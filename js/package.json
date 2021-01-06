@@ -1,0 +1,44 @@
+{
+  "name": "jupyter-widget-sparkline",
+  "version": "0.1.0",
+  "description": "Jupyter Widget Sparkline",
+  "author": "Jean-Daniel Fekete",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jdfekete/jupyter-widget-sparkline.git"
+  },
+  "keywords": [
+    "jupyter",
+    "widgets",
+    "ipython",
+    "ipywidgets",
+    "jupyterlab-extension"
+  ],
+  "files": [
+    "lib/**/*.js",
+    "dist/*.js"
+  ],
+  "scripts": {
+    "clean": "rimraf dist/",
+    "prepublish": "webpack",
+    "check": "eslint lib",  
+    "build": "webpack",
+    "watch": "webpack --watch --mode=development",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "rimraf": "^2.6.1",
+    "webpack": "^3.5.5"
+  },
+  "dependencies": {
+    "@jupyter-widgets/base": "^1.1 || ^2 || ^3",
+    "jquery": "^3.5.1",
+    "jquery-sparkline": "^2.4.0",
+    "lodash": "^4.17.4"
+  },
+  "jupyterlab": {
+    "extension": "lib/labplugin"
+  }
+}
