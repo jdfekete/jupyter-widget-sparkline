@@ -21,7 +21,7 @@ const SparklineView = widgets.DOMWidgetView.extend({
     // Defines how the widget gets rendered into the DOM
     render: function() {
         if (!this.sparklineid)
-            this.sparklineid = `sparkline-${count}`;
+            this.sparklineid = `sparkline-${count++}`;
         this.el.innerHTML = `<span class='sparkline' id='${this.sparklineid}'></span>`;
         this.data_changed();
 

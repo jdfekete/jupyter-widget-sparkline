@@ -10988,7 +10988,7 @@ const SparklineView = __WEBPACK_IMPORTED_MODULE_0__jupyter_widgets_base__["DOMWi
     // Defines how the widget gets rendered into the DOM
     render: function() {
         if (!this.sparklineid)
-            this.sparklineid = `sparkline-${count}`;
+            this.sparklineid = `sparkline-${count++}`;
         this.el.innerHTML = `<span class='sparkline' id='${this.sparklineid}'></span>`;
         this.data_changed();
 

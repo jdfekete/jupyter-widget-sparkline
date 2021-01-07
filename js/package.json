@@ -22,7 +22,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "prepublish": "webpack",
-    "check": "eslint lib",  
+    "check": "eslint lib",
     "build": "webpack",
     "watch": "webpack --watch --mode=development",
     "test": "echo \"Error: no test specified\" && exit 1"
