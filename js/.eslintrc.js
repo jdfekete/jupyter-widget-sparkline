@@ -13,5 +13,6 @@ module.exports = {
         "__webpack_public_path__": "writable"
     },
     "rules": {
+        "no-unused-vars": [2, {"vars": "all", "args": "after-used"}]
     }
 };

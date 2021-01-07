@@ -20,42 +20,36 @@ export
 const SparklineView = widgets.DOMWidgetView.extend({
     // Defines how the widget gets rendered into the DOM
     render: function() {
-        if (!this.sparklineid)
-            this.sparklineid = `sparkline-${count++}`;
-        this.el.innerHTML = `<span class='sparkline' id='${this.sparklineid}'></span>`;
+        this.span = document.createElement('span');
+        this.span.setAttribute('class', 'sparkline');
+        this.el.appendChild(this.span);
         this.data_changed();
 
-        // Observe changes in the value traitlet in Python, and define
-        // a custom callback.
         this.model.on('change:data', this.data_changed, this);
     },
 
     data_changed: function() {
-        if (this.sparklineid) {
-            const data = this.model.get('data');
-            elementReady(`#${this.sparklineid}`).then(
-                () => $(`#${this.sparklineid}`).sparkline(data.values, data));
-        }
+        const data = this.model.get('data');
+        elementVisible(this.span).then(
+            (span) => $(span).sparkline(data.values, data));
     }
 });
 
-function elementReady(selector) {
-  return new Promise((resolve) => {
-    let el = document.querySelector(selector);
-    if (el) {resolve(el);}
-    new MutationObserver((mutationRecords, observer) => {
-      // Query for elements matching the specified selector
-      Array.from(document.querySelectorAll(selector)).forEach((element) => {
-        resolve(element);
-        //Once we have resolved we don't need the observer anymore.
-        observer.disconnect();
-      });
-    })
-      .observe(document.documentElement, {
-        childList: true,
-        subtree: true
-      });
-  });
+function elementVisible(element) {
+    return new Promise((resolve) => {
+        if ($(element).is(":visible")) {
+            resolve(element);
+            return;
+        }
+        new MutationObserver((mutations, observer) => {
+            if ($(element).is(":visible")) {
+                observer.disconnect();
+                resolve(element);
+            }
+        })
+            .observe(document.documentElement, {
+                childList: true,
+                subtree: true
+            });
+    });
 }
-
-let count = 1;

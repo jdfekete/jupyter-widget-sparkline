@@ -10987,47 +10987,41 @@ const SparklineModel = __WEBPACK_IMPORTED_MODULE_0__jupyter_widgets_base__["DOMW
 const SparklineView = __WEBPACK_IMPORTED_MODULE_0__jupyter_widgets_base__["DOMWidgetView"].extend({
     // Defines how the widget gets rendered into the DOM
     render: function() {
-        if (!this.sparklineid)
-            this.sparklineid = `sparkline-${count++}`;
-        this.el.innerHTML = `<span class='sparkline' id='${this.sparklineid}'></span>`;
+        this.span = document.createElement('span');
+        this.span.setAttribute('class', 'sparkline');
+        this.el.appendChild(this.span);
         this.data_changed();
 
-        // Observe changes in the value traitlet in Python, and define
-        // a custom callback.
         this.model.on('change:data', this.data_changed, this);
     },
 
     data_changed: function() {
-        if (this.sparklineid) {
-            const data = this.model.get('data');
-            elementReady(`#${this.sparklineid}`).then(
-                () => __WEBPACK_IMPORTED_MODULE_2_jquery___default()(`#${this.sparklineid}`).sparkline(data.values, data));
-        }
+        const data = this.model.get('data');
+        elementVisible(this.span).then(
+            (span) => __WEBPACK_IMPORTED_MODULE_2_jquery___default()(span).sparkline(data.values, data));
     }
 });
 /* harmony export (immutable) */ __webpack_exports__["SparklineView"] = SparklineView;
 
 
-function elementReady(selector) {
-  return new Promise((resolve) => {
-    let el = document.querySelector(selector);
-    if (el) {resolve(el);}
-    new MutationObserver((mutationRecords, observer) => {
-      // Query for elements matching the specified selector
-      Array.from(document.querySelectorAll(selector)).forEach((element) => {
-        resolve(element);
-        //Once we have resolved we don't need the observer anymore.
-        observer.disconnect();
-      });
-    })
-      .observe(document.documentElement, {
-        childList: true,
-        subtree: true
-      });
-  });
+function elementVisible(element) {
+    return new Promise((resolve) => {
+        if (__WEBPACK_IMPORTED_MODULE_2_jquery___default()(element).is(":visible")) {
+            resolve(element);
+            return;
+        }
+        new MutationObserver((mutations, observer) => {
+            if (__WEBPACK_IMPORTED_MODULE_2_jquery___default()(element).is(":visible")) {
+                observer.disconnect();
+                resolve(element);
+            }
+        })
+            .observe(document.documentElement, {
+                childList: true,
+                subtree: true
+            });
+    });
 }
-
-let count = 1;
 
 
 /***/ }),
