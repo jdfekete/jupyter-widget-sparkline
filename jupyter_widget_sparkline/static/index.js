@@ -10978,7 +10978,9 @@ const SparklineModel = __WEBPACK_IMPORTED_MODULE_0__jupyter_widgets_base__["DOMW
         _view_module : 'jupyter-widget-sparkline',
         _model_module_version : '0.1.0',
         _view_module_version : '0.1.0',
-        data: '{}'
+        data: '{}',
+        region: '{}',
+        continuous_update: false
     })
 });
 /* harmony export (immutable) */ __webpack_exports__["SparklineModel"] = SparklineModel;
@@ -10990,30 +10992,47 @@ const SparklineView = __WEBPACK_IMPORTED_MODULE_0__jupyter_widgets_base__["DOMWi
         this.span = document.createElement('span');
         this.span.setAttribute('class', 'sparkline');
         this.el.appendChild(this.span);
+        const that = this;
+        __WEBPACK_IMPORTED_MODULE_2_jquery___default()(this.span).on('sparklineClick', (ev) => {
+            const sparkline = ev.sparklines[0],
+                  region = sparkline.getCurrentRegionFields();
+            that.model.set('region', region[0]);
+            that.model.save_changes();
+        });
         this.data_changed();
 
         this.model.on('change:data', this.data_changed, this);
+        this.model.on('change:continuous_update',
+                      this.continuous_update_changed, this);
     },
 
     data_changed: function() {
         const data = this.model.get('data');
         elementVisible(this.span).then(
             (span) => __WEBPACK_IMPORTED_MODULE_2_jquery___default()(span).sparkline(data.values, data));
+    },
+    continuous_update_changed: function() {
+        if (this.model.get('continuous_update')) {
+            __WEBPACK_IMPORTED_MODULE_2_jquery___default()(this.span).on('sparklineRegionChange', this.region_changed);
+        }
+        else {
+            __WEBPACK_IMPORTED_MODULE_2_jquery___default()(this.span).of('sparklineRegionChange');
+        }
     }
 });
 /* harmony export (immutable) */ __webpack_exports__["SparklineView"] = SparklineView;
 
 
-function elementVisible(element) {
+function elementVisible(el) {
     return new Promise((resolve) => {
-        if (__WEBPACK_IMPORTED_MODULE_2_jquery___default()(element).is(":visible")) {
-            resolve(element);
+        if (__WEBPACK_IMPORTED_MODULE_2_jquery___default()(el).is(":visible") && !__WEBPACK_IMPORTED_MODULE_2_jquery___default()(el).parents().is(':hidden')) {
+            resolve(el);
             return;
         }
         new MutationObserver((mutations, observer) => {
-            if (__WEBPACK_IMPORTED_MODULE_2_jquery___default()(element).is(":visible")) {
+            if (__WEBPACK_IMPORTED_MODULE_2_jquery___default()(el).is(":visible") && !__WEBPACK_IMPORTED_MODULE_2_jquery___default()(el).parents().is(':hidden')) {
                 observer.disconnect();
-                resolve(element);
+                resolve(el);
             }
         })
             .observe(document.documentElement, {

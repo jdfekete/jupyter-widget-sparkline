@@ -1,5 +1,5 @@
 import ipywidgets as widgets
-from traitlets import Unicode, Dict, validate, TraitError
+from traitlets import Unicode, Dict, Bool, validate, TraitError
 
 
 @widgets.register
@@ -26,6 +26,8 @@ class Sparkline(widgets.DOMWidget):
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
 
     data = Dict({}).tag(sync=True)
+    region = Dict({}).tag(sync=True)
+    continuous_update = Bool(False).tag(sync=True)
 
     @validate('data')
     def _valid_data(self, proposal):
