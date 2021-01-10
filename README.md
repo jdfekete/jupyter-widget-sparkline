@@ -1,7 +1,11 @@
 jupyter-widget-sparkline
 ===============================
 
-Jupyter Widget Sparkline
+Jupyter Widget Sparkline encapsulates [jquery Sparklines](https://omnipotent.net/jquery.sparkline/) as a jupyter notebook widget.
+
+![Sparklines in a notebook](jupyter_widget_sparkline.png)
+
+Options and values are passed throught the `data` field. The `region` field is updated when users click on the content of a sparkline.
 
 Installation
 ------------
