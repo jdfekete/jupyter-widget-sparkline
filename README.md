@@ -1,11 +1,39 @@
 jupyter-widget-sparkline
 ===============================
 
-Jupyter Widget Sparkline encapsulates [jquery Sparklines](https://omnipotent.net/jquery.sparkline/) as a jupyter notebook widget.
+Jupyter Widget Sparkline encapsulates [jQuery Sparklines](https://omnipotent.net/jquery.sparkline/) as a jupyter notebook widget.
 
 ![Sparklines in a notebook](jupyter_widget_sparkline.png)
 
-Options and values are passed throught the `data` field. The `region` field is updated when users click on the content of a sparkline.
+The following example creates a simple Sparkline barchart widget:
+
+``` python
+from jupyter_widget_sparkline import Sparkline
+sparkline = Sparkline()
+sparkline.data = { 'values': [10,8,5,7,4,4,1], 'type':'bar'}
+display(sparkline)
+```
+
+Options and values are passed throught the `data` field. 
+
+See the [documentation of the jQuery Sparklines](https://omnipotent.net/jquery.sparkline/#s-docs) for all the options.
+
+The `region` field is updated when users click on the content of a sparkline, as shown in the example:
+
+``` python
+sparkline2 = Sparkline()
+output2 = widgets.Output()
+def region_changed2(change):
+    with output2:
+    output2.clear_output()
+        print(change['new'])
+sparkline2.data = { 'values': [10,8,5,7,4,4,1], 'type':'bar'}
+sparkline2.observe(region_changed2, names='region')
+
+widgets.VBox([sparkline2, output2])
+```
+
+The widget is dynamic so when the `data` field is changed, the widget is updated.
 
 Installation
 ------------
