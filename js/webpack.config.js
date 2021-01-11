@@ -4,25 +4,20 @@ var version = require('./package.json').version;
 // Custom webpack rules are generally the same for all webpack bundles, hence
 // stored in a separate local variable.
 var rules = [
-    { test: /\.css$/, use: ['style-loader', 'css-loader']}
-]
+    { test: /\.css$/, use: ['style-loader', 'css-loader']},
+    {test: /\.(png|svg|jpg|gif)$/, use: ['file-loader']},
+];
 
 
 module.exports = [
     {// Notebook extension
-     //
-     // This bundle only contains the part of the JavaScript that is run on
-     // load of the notebook. This section generally only performs
-     // some configuration for requirejs, and provides the legacy
-     // "load_ipython_extension" function which is required for any notebook
-     // extension.
-     //
         entry: './lib/extension.js',
         output: {
             filename: 'extension.js',
             path: path.resolve(__dirname, '..', 'jupyter_widget_sparkline', 'static'),
             libraryTarget: 'amd'
-        }
+        },
+        mode: 'development'
     },
     {// Bundle for the notebook containing the custom widget views and models
      //
@@ -40,6 +35,7 @@ module.exports = [
         module: {
             rules: rules
         },
+        mode: 'development',
         externals: ['@jupyter-widgets/base']
     },
     {// Embeddable jupyter-widget-sparkline bundle
@@ -61,12 +57,13 @@ module.exports = [
             filename: 'index.js',
             path: path.resolve(__dirname, 'dist'),
             libraryTarget: 'amd',
-            publicPath: 'https://unpkg.com/jupyter-widget-sparkline@' + version + '/dist/'
+            publicPath: 'https://unpkg.com/progressivis-nb-widgets@' + version + '/dist/'
         },
         devtool: 'source-map',
         module: {
             rules: rules
         },
+        mode: 'development',
         externals: ['@jupyter-widgets/base']
     }
 ];

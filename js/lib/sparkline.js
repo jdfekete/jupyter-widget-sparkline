@@ -3,6 +3,8 @@ import _ from 'lodash';
 import $ from 'jquery';
 import 'jquery-sparkline';
 
+require("../css/sparkline.css");
+
 export
 const SparklineModel = widgets.DOMWidgetModel.extend({
     defaults: _.extend(widgets.DOMWidgetModel.prototype.defaults(), {
@@ -12,8 +14,10 @@ const SparklineModel = widgets.DOMWidgetModel.extend({
         _view_module : 'jupyter-widget-sparkline',
         _model_module_version : '0.1.0',
         _view_module_version : '0.1.0',
-        data: '{}',
-        region: '{}',
+        values: [],
+        options: {},
+        progress: 100,
+        region: {},
         continuous_update: false
     })
 });
@@ -22,34 +26,52 @@ export
 const SparklineView = widgets.DOMWidgetView.extend({
     // Defines how the widget gets rendered into the DOM
     render: function() {
-        this.span = document.createElement('span');
-        this.span.setAttribute('class', 'sparkline');
-        this.el.appendChild(this.span);
+        this.progress = document.createElement("div");
+        this.el.appendChild(this.progress);
+        this.span = document.createElement("span");
+        $(this.progress)
+            .addClass("progress-background")
+            .append(this.span);
         const that = this;
-        $(this.span).on('sparklineClick', (ev) => {
-            const sparkline = ev.sparklines[0],
-                  region = sparkline.getCurrentRegionFields();
-            that.model.set('region', region[0]);
-            that.model.save_changes();
-        });
+        $(this.span)
+            .addClass('sparkline progress-fill')
+            .on('sparklineClick', (ev) => {
+                const sparkline = ev.sparklines[0],
+                      region = sparkline.getCurrentRegionFields();
+                that.model.set('region', region[0]);
+                that.model.save_changes();
+            });
         this.data_changed();
 
-        this.model.on('change:data', this.data_changed, this);
+        this.model.on('change:values', this.data_changed, this);
+        this.model.on('change:options', this.data_changed, this);
+        this.model.on('change:progress', this.data_changed, this);
         this.model.on('change:continuous_update',
                       this.continuous_update_changed, this);
     },
 
     data_changed: function() {
-        const data = this.model.get('data');
+        const values = this.model.get('values');
+        const options = this.model.get('options');
+        const progress = this.model.get('progress');
+        const that = this;
         elementVisible(this.span).then(
-            (span) => $(span).sparkline(data.values, data));
+            () => {
+                if (progress) {
+                   $(that.span).css('width', progress+'%');
+                }
+                $(that.span).sparkline(values,
+                                       _.extend(options,
+                                                {width: '100%',
+                                                 height: '100%'}));
+            });
     },
     continuous_update_changed: function() {
         if (this.model.get('continuous_update')) {
             $(this.span).on('sparklineRegionChange', this.region_changed);
         }
         else {
-            $(this.span).of('sparklineRegionChange');
+            $(this.span).off('sparklineRegionChange');
         }
     }
 });

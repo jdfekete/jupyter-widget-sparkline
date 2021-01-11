@@ -36,12 +36,32 @@ define(function() { return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -59,40 +79,22 @@ define(function() { return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./lib/extension.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ "./lib/extension.js":
+/*!**************************!*\
+  !*** ./lib/extension.js ***!
+  \**************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// This file contains the javascript that is run when the notebook is loaded.
-// It contains some requirejs configuration and the `load_ipython_extension`
-// which is required for any notebook extension.
-//
-// Some static assets may be required by the custom widget javascript. The base
-// url for the notebook is not known at build time and is therefore computed
-// dynamically.
-__webpack_require__.p = document.querySelector('body').getAttribute('data-base-url') + 'nbextensions/jupyter-widget-sparkline';
-
-
-// Configure requirejs
-if (window.require) {
-    window.require.config({
-        map: {
-            "*" : {
-                "jupyter-widget-sparkline": "nbextensions/jupyter-widget-sparkline/index",
-            }
-        }
-    });
-}
-
-// Export the required load_ipython_extension
-module.exports = {
-    load_ipython_extension: function() {}
-};
-
+eval("// This file contains the javascript that is run when the notebook is loaded.\n// It contains some requirejs configuration and the `load_ipython_extension`\n// which is required for any notebook extension.\n//\n// Some static assets may be required by the custom widget javascript. The base\n// url for the notebook is not known at build time and is therefore computed\n// dynamically.\n__webpack_require__.p = document.querySelector('body').getAttribute('data-base-url') + 'nbextensions/jupyter-widget-sparkline';\n\n\n// Configure requirejs\nif (window.require) {\n    window.require.config({\n        map: {\n            \"*\" : {\n                \"jupyter-widget-sparkline\": \"nbextensions/jupyter-widget-sparkline/index\",\n            }\n        }\n    });\n}\n\n// Export the required load_ipython_extension\nmodule.exports = {\n    load_ipython_extension: function() {}\n};\n\n\n//# sourceURL=webpack:///./lib/extension.js?");
 
 /***/ })
-/******/ ])});;
+
+/******/ })});;
