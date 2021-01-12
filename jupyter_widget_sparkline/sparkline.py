@@ -29,7 +29,6 @@ class Sparkline(widgets.DOMWidget):
 
     values = List().tag(sync=True)
     options = Dict({}).tag(sync=True)
-    progress = Float(100, min=0, max=100).tag(sync=True)
     region = Dict({}).tag(sync=True)
     continuous_update = Bool(False).tag(sync=True)
 

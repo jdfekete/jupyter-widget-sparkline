@@ -155,91 +155,76 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ../css/sparkline.css */ "./css/sparkline.css");
 
 const SparklineModel = _jupyter_widgets_base__WEBPACK_IMPORTED_MODULE_0__["DOMWidgetModel"].extend({
-    defaults: lodash__WEBPACK_IMPORTED_MODULE_1___default.a.extend(_jupyter_widgets_base__WEBPACK_IMPORTED_MODULE_0__["DOMWidgetModel"].prototype.defaults(), {
-        _model_name : 'SparklineModel',
-        _view_name : 'SparklineView',
-        _model_module : 'jupyter-widget-sparkline',
-        _view_module : 'jupyter-widget-sparkline',
-        _model_module_version : '0.1.0',
-        _view_module_version : '0.1.0',
-        values: [],
-        options: {},
-        progress: 100,
-        region: {},
-        continuous_update: false
-    })
+  defaults: lodash__WEBPACK_IMPORTED_MODULE_1___default.a.extend(_jupyter_widgets_base__WEBPACK_IMPORTED_MODULE_0__["DOMWidgetModel"].prototype.defaults(), {
+    _model_name : 'SparklineModel',
+    _view_name : 'SparklineView',
+    _model_module : 'jupyter-widget-sparkline',
+    _view_module : 'jupyter-widget-sparkline',
+    _model_module_version : '0.1.0',
+    _view_module_version : '0.1.0',
+    values: [],
+    options: {},
+    region: {},
+    continuous_update: false
+  })
 });
 
 const SparklineView = _jupyter_widgets_base__WEBPACK_IMPORTED_MODULE_0__["DOMWidgetView"].extend({
-    // Defines how the widget gets rendered into the DOM
-    render: function() {
-        this.progress = document.createElement("div");
-        this.el.appendChild(this.progress);
-        this.span = document.createElement("span");
-        jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.progress)
-            .addClass("progress-background")
-            .append(this.span);
-        const that = this;
-        jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.span)
-            .addClass('sparkline progress-fill')
-            .on('sparklineClick', (ev) => {
-                const sparkline = ev.sparklines[0],
-                      region = sparkline.getCurrentRegionFields();
-                that.model.set('region', region[0]);
-                that.model.save_changes();
-            });
-        this.data_changed();
+  // Defines how the widget gets rendered into the DOM
+  render: function() {
+    this.span = document.createElement("span");
+    this.setElement(this.span);
+    const that = this;
+    jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.span)
+      .addClass('sparkline')
+      .on('sparklineClick', (ev) => {
+        const sparkline = ev.sparklines[0],
+              region = sparkline.getCurrentRegionFields();
+        that.model.set('region', region[0]);
+        that.model.save_changes();
+      });
+    this.data_changed();
 
-        this.model.on('change:values', this.data_changed, this);
-        this.model.on('change:options', this.data_changed, this);
-        this.model.on('change:progress', this.data_changed, this);
-        this.model.on('change:continuous_update',
-                      this.continuous_update_changed, this);
-    },
+    this.model.on('change:values', this.data_changed, this);
+    this.model.on('change:options', this.data_changed, this);
+    this.model.on('change:continuous_update',
+                  this.continuous_update_changed, this);
+  },
 
-    data_changed: function() {
-        const values = this.model.get('values');
-        const options = this.model.get('options');
-        const progress = this.model.get('progress');
-        const that = this;
-        elementVisible(this.span).then(
-            () => {
-                if (progress) {
-                   jquery__WEBPACK_IMPORTED_MODULE_2___default()(that.span).css('width', progress+'%');
-                }
-                jquery__WEBPACK_IMPORTED_MODULE_2___default()(that.span).sparkline(values,
-                                       lodash__WEBPACK_IMPORTED_MODULE_1___default.a.extend(options,
-                                                {width: '100%',
-                                                 height: '100%'}));
-            });
-    },
-    continuous_update_changed: function() {
-        if (this.model.get('continuous_update')) {
-            jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.span).on('sparklineRegionChange', this.region_changed);
-        }
-        else {
-            jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.span).off('sparklineRegionChange');
-        }
+  data_changed: function() {
+    const values = this.model.get('values');
+    const options = this.model.get('options');
+    const that = this;
+    elementVisible(this.span).then(
+      () => jquery__WEBPACK_IMPORTED_MODULE_2___default()(that.span).sparkline(values, options));
+  },
+  continuous_update_changed: function() {
+    if (this.model.get('continuous_update')) {
+      jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.span).on('sparklineRegionChange', this.region_changed);
     }
+    else {
+      jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.span).off('sparklineRegionChange');
+    }
+  }
 });
 
 function elementVisible(el) {
-    return new Promise((resolve) => {
-        if (jquery__WEBPACK_IMPORTED_MODULE_2___default()(el).is(":visible") && !jquery__WEBPACK_IMPORTED_MODULE_2___default()(el).parents().is(':hidden')) {
-            resolve(el);
-            return;
-        }
-        new MutationObserver((mutations, observer) => {
-            if (jquery__WEBPACK_IMPORTED_MODULE_2___default()(el).is(":visible") && !jquery__WEBPACK_IMPORTED_MODULE_2___default()(el).parents().is(':hidden')) {
-                observer.disconnect();
-                resolve(el);
-            }
-        })
-            .observe(document.documentElement, {
-                childList: true,
-                subtree: true
-            });
-    });
+  return new Promise((resolve) => {
+    if (jquery__WEBPACK_IMPORTED_MODULE_2___default()(el).is(":visible") && !jquery__WEBPACK_IMPORTED_MODULE_2___default()(el).parents().is(':hidden')) {
+      resolve(el);
+      return;
+    }
+    new MutationObserver((mutations, observer) => {
+      if (jquery__WEBPACK_IMPORTED_MODULE_2___default()(el).is(":visible") && !jquery__WEBPACK_IMPORTED_MODULE_2___default()(el).parents().is(':hidden')) {
+        observer.disconnect();
+        resolve(el);
+      }
+    })
+      .observe(document.documentElement, {
+        childList: true,
+        subtree: true
+      });
+  });
 }
 
 
