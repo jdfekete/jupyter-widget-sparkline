@@ -14,6 +14,7 @@ const SparklineModel = widgets.DOMWidgetModel.extend({
     _view_module : 'jupyter-widget-sparkline',
     _model_module_version : '0.1.0',
     _view_module_version : '0.1.0',
+    type: 'line',
     values: [],
     options: {},
     region: {},
@@ -25,10 +26,9 @@ export
 const SparklineView = widgets.DOMWidgetView.extend({
   // Defines how the widget gets rendered into the DOM
   render: function() {
-    this.span = document.createElement("span");
-    this.setElement(this.span);
+    this.setElement(document.createElement("span"));
     const that = this;
-    $(this.span)
+    $(this.el)
       .addClass('sparkline')
       .on('sparklineClick', (ev) => {
         const sparkline = ev.sparklines[0],
@@ -38,6 +38,7 @@ const SparklineView = widgets.DOMWidgetView.extend({
       });
     this.data_changed();
 
+    this.model.on('change:type', this.data_changed, this);
     this.model.on('change:values', this.data_changed, this);
     this.model.on('change:options', this.data_changed, this);
     this.model.on('change:continuous_update',
@@ -45,18 +46,19 @@ const SparklineView = widgets.DOMWidgetView.extend({
   },
 
   data_changed: function() {
+    const type = this.model.get('type');
     const values = this.model.get('values');
-    const options = this.model.get('options');
+    const options = _.extend({type: type}, this.model.get('options'));
     const that = this;
-    elementVisible(this.span).then(
-      () => $(that.span).sparkline(values, options));
+    elementVisible(this.el).then(
+      () => $(that.el).sparkline(values, options));
   },
   continuous_update_changed: function() {
     if (this.model.get('continuous_update')) {
-      $(this.span).on('sparklineRegionChange', this.region_changed);
+      $(this.el).on('sparklineRegionChange', this.region_changed);
     }
     else {
-      $(this.span).off('sparklineRegionChange');
+      $(this.el).off('sparklineRegionChange');
     }
   }
 });

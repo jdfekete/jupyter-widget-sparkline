@@ -162,6 +162,7 @@ const SparklineModel = _jupyter_widgets_base__WEBPACK_IMPORTED_MODULE_0__["DOMWi
     _view_module : 'jupyter-widget-sparkline',
     _model_module_version : '0.1.0',
     _view_module_version : '0.1.0',
+    type: 'line',
     values: [],
     options: {},
     region: {},
@@ -172,10 +173,9 @@ const SparklineModel = _jupyter_widgets_base__WEBPACK_IMPORTED_MODULE_0__["DOMWi
 const SparklineView = _jupyter_widgets_base__WEBPACK_IMPORTED_MODULE_0__["DOMWidgetView"].extend({
   // Defines how the widget gets rendered into the DOM
   render: function() {
-    this.span = document.createElement("span");
-    this.setElement(this.span);
+    this.setElement(document.createElement("span"));
     const that = this;
-    jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.span)
+    jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.el)
       .addClass('sparkline')
       .on('sparklineClick', (ev) => {
         const sparkline = ev.sparklines[0],
@@ -185,6 +185,7 @@ const SparklineView = _jupyter_widgets_base__WEBPACK_IMPORTED_MODULE_0__["DOMWid
       });
     this.data_changed();
 
+    this.model.on('change:type', this.data_changed, this);
     this.model.on('change:values', this.data_changed, this);
     this.model.on('change:options', this.data_changed, this);
     this.model.on('change:continuous_update',
@@ -192,18 +193,19 @@ const SparklineView = _jupyter_widgets_base__WEBPACK_IMPORTED_MODULE_0__["DOMWid
   },
 
   data_changed: function() {
+    const type = this.model.get('type');
     const values = this.model.get('values');
-    const options = this.model.get('options');
+    const options = lodash__WEBPACK_IMPORTED_MODULE_1___default.a.extend({type: type}, this.model.get('options'));
     const that = this;
-    elementVisible(this.span).then(
-      () => jquery__WEBPACK_IMPORTED_MODULE_2___default()(that.span).sparkline(values, options));
+    elementVisible(this.el).then(
+      () => jquery__WEBPACK_IMPORTED_MODULE_2___default()(that.el).sparkline(values, options));
   },
   continuous_update_changed: function() {
     if (this.model.get('continuous_update')) {
-      jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.span).on('sparklineRegionChange', this.region_changed);
+      jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.el).on('sparklineRegionChange', this.region_changed);
     }
     else {
-      jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.span).off('sparklineRegionChange');
+      jquery__WEBPACK_IMPORTED_MODULE_2___default()(this.el).off('sparklineRegionChange');
     }
   }
 });
@@ -31852,10 +31854,10 @@ module.exports = function(module) {
 /*!**********************!*\
   !*** ./package.json ***!
   \**********************/
-/*! exports provided: name, version, description, author, license, main, repository, keywords, files, scripts, devDependencies, dependencies, jupyterlab, default */
+/*! exports provided: name, version, description, author, license, main, repository, keywords, files, scripts, devDependencies, dependencies, jupyterlab, jshintConfig, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"name\":\"jupyter-widget-sparkline\",\"version\":\"0.1.0\",\"description\":\"Jupyter Widget Sparkline\",\"author\":{\"name\":\"Jean-Daniel Fekete\",\"email\":\"Jean-Daniel.Fekete@inria.fr\"},\"license\":\"MIT\",\"main\":\"lib/index.js\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/jdfekete/jupyter-widget-sparkline.git\"},\"keywords\":[\"jupyter\",\"widgets\",\"ipython\",\"ipywidgets\",\"jupyterlab-extension\"],\"files\":[\"lib/\",\"css/\",\"dist/\"],\"scripts\":{\"clean\":\"rimraf dist/\",\"prepublish\":\"webpack\",\"check\":\"eslint lib\",\"build\":\"webpack\",\"watch\":\"webpack --watch --mode=development\",\"test\":\"echo \\\"Error: no test specified\\\" && exit 1\"},\"devDependencies\":{\"eslint\":\"^7.17.0\",\"rimraf\":\"^3.0.2\",\"webpack\":\"^4.42.2\",\"webpack-cli\":\"^3.3.11\",\"css-loader\":\"^5.0.1\",\"style-loader\":\"^2.0.0\",\"file-loader\":\"^6.2.0\"},\"dependencies\":{\"@jupyter-widgets/base\":\"^2 || ^3 || ^4.0.0\",\"jquery\":\"^3.5.1\",\"jquery-sparkline\":\"^2.4.0\",\"lodash\":\"^4.17.4\"},\"jupyterlab\":{\"extension\":\"lib/labplugin\"}}");
+module.exports = JSON.parse("{\"name\":\"jupyter-widget-sparkline\",\"version\":\"0.1.0\",\"description\":\"Jupyter Widget Sparkline\",\"author\":{\"name\":\"Jean-Daniel Fekete\",\"email\":\"Jean-Daniel.Fekete@inria.fr\"},\"license\":\"MIT\",\"main\":\"lib/index.js\",\"repository\":{\"type\":\"git\",\"url\":\"https://github.com/jdfekete/jupyter-widget-sparkline.git\"},\"keywords\":[\"jupyter\",\"widgets\",\"ipython\",\"ipywidgets\",\"jupyterlab-extension\"],\"files\":[\"lib/\",\"css/\",\"dist/\"],\"scripts\":{\"clean\":\"rimraf dist/\",\"prepublish\":\"webpack\",\"check\":\"eslint lib\",\"build\":\"webpack\",\"watch\":\"webpack --watch --mode=development\",\"test\":\"echo \\\"Error: no test specified\\\" && exit 1\"},\"devDependencies\":{\"css-loader\":\"^5.0.1\",\"eslint\":\"^7.17.0\",\"file-loader\":\"^6.2.0\",\"rimraf\":\"^3.0.2\",\"style-loader\":\"^2.0.0\",\"webpack\":\"^4.42.2\",\"webpack-cli\":\"^3.3.11\"},\"dependencies\":{\"@jupyter-widgets/base\":\"^2 || ^3 || ^4.0.0\",\"jquery\":\"^3.5.1\",\"jquery-sparkline\":\"^2.4.0\",\"lodash\":\"^4.17.4\"},\"jupyterlab\":{\"extension\":\"lib/labplugin\"},\"jshintConfig\":{\"esversion\":6,\"node\":true,\"laxbreak\":true,\"varstmt\":true,\"undef\":true,\"unused\":true,\"globals\":{\"console\":false,\"document\":false}}}");
 
 /***/ }),
 
